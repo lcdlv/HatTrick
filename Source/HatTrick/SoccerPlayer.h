@@ -34,6 +34,8 @@ public:
 
 	void shot();
 
+	void TimerGenerico();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool hasBall = false;
 
@@ -41,13 +43,24 @@ public:
 		bool shotball = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool inAnimation = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AActor* pelotaActor;
 
 	UPROPERTY()
-		UAnimMontage *MyCMontage;
+		UAnimMontage *ShootMontage;
+
+	UPROPERTY()
+		UAnimMontage *BarridaMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UShapeComponent* PieCollition;
+
+	FTimerHandle timerHander;
+
+	UPROPERTY(EditAnywhere)
+	float tiempoDelay;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USceneComponent* RootMesh;
