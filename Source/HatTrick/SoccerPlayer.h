@@ -36,6 +36,8 @@ public:
 
 	void TimerGenerico();
 
+	void posesion();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool hasBall = false;
 

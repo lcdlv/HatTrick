@@ -68,10 +68,13 @@ void APelota::Shootea(FVector vector, float velocidadShot)
 
 void APelota::OnOverlap(AActor * me, AActor * other)
 {
+	if(jugadorTemp != nullptr) jugadorTemp->UnPossessed();
 	pelotaMesh->SetSimulatePhysics(false);
 	AttachToActor(other, FAttachmentTransformRules::KeepWorldTransform, FName(TEXT("PelotaSocket")));
-
+	UE_LOG(LogTemp, Warning, TEXT("Toca"));
 	ASoccerPlayer* soccerPlayer = Cast<ASoccerPlayer>(other);
 	soccerPlayer->hasBall = true;
 	soccerPlayer->pelotaActor = me;
+	soccerPlayer->posesion();
+	jugadorTemp = soccerPlayer;
 }

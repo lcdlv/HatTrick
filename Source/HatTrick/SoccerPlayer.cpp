@@ -97,4 +97,9 @@ void ASoccerPlayer::TimerGenerico()
 	inAnimation = false;
 }
 
+void ASoccerPlayer::posesion()
+{
+	//this->AutoPossessPlayer;
+}
+
 

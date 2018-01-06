@@ -29,6 +29,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* pelotaMesh;
 
+	UPROPERTY(VisibleAnywhere)
+		class ASoccerPlayer* jugadorTemp;
+
 	void Physic(bool activado);
 
 	void Shootea(FVector vector, float velocidadShot);
