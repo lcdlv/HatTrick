@@ -14,7 +14,5 @@ class HATTRICK_API ASoccerPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+
 };

@@ -16,15 +16,15 @@
 	},
 	"BuildProducts": [
 		{
-			"Path": "$(ProjectDir)/Binaries/Win64/UE4Editor-HatTrick-8870.dll",
+			"Path": "$(ProjectDir)/Binaries/Win64/UE4Editor-HatTrick-9686.dll",
 			"Type": "DynamicLibrary"
 		},
 		{
-			"Path": "$(ProjectDir)/Binaries/Win64/UE4Editor-HatTrick-8870.pdb",
+			"Path": "$(ProjectDir)/Binaries/Win64/UE4Editor-HatTrick-9686.pdb",
 			"Type": "SymbolFile"
 		},
 		{
-			"Path": "$(ProjectDir)/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-HatTrick-8870.lib",
+			"Path": "$(ProjectDir)/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-HatTrick-9686.lib",
 			"Type": "ImportLibrary"
 		},
 		{

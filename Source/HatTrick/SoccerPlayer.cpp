@@ -99,7 +99,7 @@ void ASoccerPlayer::TimerGenerico()
 
 void ASoccerPlayer::posesion()
 {
-	//this->AutoPossessPlayer;
+	
 }
 
 

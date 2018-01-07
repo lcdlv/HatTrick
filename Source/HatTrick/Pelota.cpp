@@ -5,6 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Engine/World.h"
+#include "SoccerPlayerController.h"
 
 
 // Sets default values
@@ -68,13 +70,18 @@ void APelota::Shootea(FVector vector, float velocidadShot)
 
 void APelota::OnOverlap(AActor * me, AActor * other)
 {
-	if(jugadorTemp != nullptr) jugadorTemp->UnPossessed();
+	APlayerController* controllerPlayer = GetWorld()->GetFirstPlayerController();
+	ASoccerPlayerController* soccerController = Cast<ASoccerPlayerController>(controllerPlayer);
+	if (jugadorTemp != nullptr && soccerController != nullptr) {
+		soccerController->UnPossess();
+	}
 	pelotaMesh->SetSimulatePhysics(false);
 	AttachToActor(other, FAttachmentTransformRules::KeepWorldTransform, FName(TEXT("PelotaSocket")));
 	UE_LOG(LogTemp, Warning, TEXT("Toca"));
 	ASoccerPlayer* soccerPlayer = Cast<ASoccerPlayer>(other);
 	soccerPlayer->hasBall = true;
 	soccerPlayer->pelotaActor = me;
-	soccerPlayer->posesion();
+	//soccerController->SetActorRelativeLocation(soccerPlayer->GetActorLocation());
+	soccerController->Possess(soccerPlayer);
 	jugadorTemp = soccerPlayer;
 }
