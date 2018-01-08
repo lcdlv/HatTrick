@@ -81,8 +81,20 @@ void ASoccerPlayer::shot()
 		PlayAnimMontage(ShootMontage, 1.0f);
 		inAnimation = true;
 		tiempoDelay = ShootMontage->GetPlayLength();
-		pelotaMaldita->Shootea(GetActorForwardVector(), 1000);
 		GetWorldTimerManager().SetTimer(timerHander, this, &ASoccerPlayer::TimerGenerico, tiempoDelay);
+
+		//Magia del pase perfecto
+
+		FCollisionShape Shape = FCollisionShape::MakeSphere(500.0f);
+		TArray<FHitResult> SweepResult;
+		GetWorld()->SweepMultiByChannel(SweepResult, GetActorLocation(), GetActorLocation() + (GetActorForwardVector() * 5000.f), FQuat::Identity, ECC_Pawn, Shape);
+		for (auto& Sweep : SweepResult)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("MyCharacter's FName is %s"),
+				*Sweep.GetActor()->GetName());
+			//Falta separar los jugadores
+		}
+		pelotaMaldita->Shootea(GetActorForwardVector(), 1000);
 	}
 	else {
 		PlayAnimMontage(BarridaMontage, 1.0f);
