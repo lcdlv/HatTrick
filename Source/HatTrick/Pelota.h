@@ -34,7 +34,7 @@ public:
 
 	void Physic(bool activado);
 
-	void Shootea(FVector vector, float velocidadShot);
+	void Shootea(FVector vector);
 
 private:
 	UFUNCTION()

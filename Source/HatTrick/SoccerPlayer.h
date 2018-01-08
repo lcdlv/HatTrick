@@ -67,5 +67,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USceneComponent* RootMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector locationPase = FVector(0,0,0);
+
+	int fuerzaPase = 3;
 };
 

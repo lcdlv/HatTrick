@@ -62,9 +62,9 @@ void APelota::Physic(bool activado)
 	pelotaMesh->SetSimulatePhysics(activado);
 }
 
-void APelota::Shootea(FVector vector, float velocidadShot)
+void APelota::Shootea(FVector vector)
 {
-	pelotaMesh->SetPhysicsLinearVelocity(vector * velocidadShot);
+	pelotaMesh->SetPhysicsLinearVelocity(vector);
 }
 
 

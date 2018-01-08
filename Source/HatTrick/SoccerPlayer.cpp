@@ -87,14 +87,26 @@ void ASoccerPlayer::shot()
 
 		FCollisionShape Shape = FCollisionShape::MakeSphere(500.0f);
 		TArray<FHitResult> SweepResult;
-		GetWorld()->SweepMultiByChannel(SweepResult, GetActorLocation(), GetActorLocation() + (GetActorForwardVector() * 5000.f), FQuat::Identity, ECC_Pawn, Shape);
+		GetWorld()->SweepMultiByChannel(SweepResult, GetActorLocation() + (GetActorForwardVector() * 100), GetActorLocation() + (GetActorForwardVector() * 5000.f), FQuat::Identity, ECC_EngineTraceChannel2, Shape);
 		for (auto& Sweep : SweepResult)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("MyCharacter's FName is %s"),
 				*Sweep.GetActor()->GetName());
 			//Falta separar los jugadores
+			if (Sweep.GetActor()->GetName().Contains("MySoccerPlayer")) {
+				locationPase = (Sweep.GetActor()->GetActorLocation()-GetActorLocation())*fuerzaPase;
+				UE_LOG(LogTemp, Warning, TEXT("ELEGIDO %s"), *Sweep.GetActor()->GetName());
+				break;
+			}
+			
 		}
-		pelotaMaldita->Shootea(GetActorForwardVector(), 1000);
+		if (locationPase == FVector(0,0,0)) {
+			locationPase = GetActorForwardVector() * 1000;
+			UE_LOG(LogTemp, Warning, TEXT("POR DEFAULT"));
+		}
+		//pelotaMaldita->Shootea(GetActorForwardVector(), 1000);
+		UE_LOG(LogTemp, Warning, TEXT("DA PASE A %s"), *locationPase.ToString());
+		pelotaMaldita->Shootea(locationPase);
 	}
 	else {
 		PlayAnimMontage(BarridaMontage, 1.0f);
