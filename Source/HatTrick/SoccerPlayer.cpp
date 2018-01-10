@@ -6,6 +6,7 @@
 #include "Pelota.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "TimerManager.h"
+#include "HatTrickGameModeBase.h"
 
 
 // Sets default values
@@ -25,6 +26,9 @@ void ASoccerPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	gameMode = Cast<AHatTrickGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (gameMode)
+		gameMode->players.Add(this);
 }
 
 // Called every frame
@@ -49,25 +53,16 @@ void ASoccerPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void ASoccerPlayer::girar(float value)
 {
 	if (inAnimation) return;
-	// find out which way is right
-	FRotator Rotation = Controller->GetControlRotation();
-	FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	// get right vector 
-	FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	// add movement in that direction
-	AddMovementInput(Direction, value);
+	AddMovementInput(FVector(0,1,0), value);
 }
 
 void ASoccerPlayer::adelante(float value)
 {
 	if (inAnimation) return;
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	// get forward vector
-	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	AddMovementInput(Direction, value);
+	AddMovementInput(FVector(1,0,0), value);
 }
 
 void ASoccerPlayer::shot()
@@ -85,27 +80,16 @@ void ASoccerPlayer::shot()
 
 		//Magia del pase perfecto
 
-		FCollisionShape Shape = FCollisionShape::MakeSphere(500.0f);
-		TArray<FHitResult> SweepResult;
-		GetWorld()->SweepMultiByChannel(SweepResult, GetActorLocation() + (GetActorForwardVector() * 100), GetActorLocation() + (GetActorForwardVector() * 5000.f), FQuat::Identity, ECC_EngineTraceChannel2, Shape);
-		for (auto& Sweep : SweepResult)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("MyCharacter's FName is %s"),
-				*Sweep.GetActor()->GetName());
-			//Falta separar los jugadores
-			if (Sweep.GetActor()->GetName().Contains("MySoccerPlayer")) {
-				locationPase = (Sweep.GetActor()->GetActorLocation()-GetActorLocation())*fuerzaPase;
-				UE_LOG(LogTemp, Warning, TEXT("ELEGIDO %s"), *Sweep.GetActor()->GetName());
-				break;
-			}
-			
+		
+		ASoccerPlayer* nearestPlayer = GetNearestPlayer();
+		if (nearestPlayer) {
+			locationPase = (nearestPlayer->GetActorLocation() - GetActorLocation())*fuerzaPase;
 		}
-		if (locationPase == FVector(0,0,0)) {
+		else {
 			locationPase = GetActorForwardVector() * 1000;
-			UE_LOG(LogTemp, Warning, TEXT("POR DEFAULT"));
 		}
+
 		//pelotaMaldita->Shootea(GetActorForwardVector(), 1000);
-		UE_LOG(LogTemp, Warning, TEXT("DA PASE A %s"), *locationPase.ToString());
 		pelotaMaldita->Shootea(locationPase);
 	}
 	else {
@@ -126,4 +110,34 @@ void ASoccerPlayer::posesion()
 	
 }
 
+ASoccerPlayer* ASoccerPlayer::GetNearestPlayer()
+{
+	ASoccerPlayer* nearestPlayer = nullptr;
+	float nearestDot = -1;
+	for (int i = 0; i < gameMode->players.Num(); i++)
+	{
+		ASoccerPlayer* player = gameMode->players[i];
+		if (player == this) continue;
 
+		//Obtengo la dirección desde yo hacia el jugador que estoy recorriendo
+		FVector dirToPlayer = player->GetActorLocation() - GetActorLocation();
+		dirToPlayer.Normalize();
+
+		//Obtengo que tan paralelo es la direccion hacia el jugador y mi direccion hacia adelante
+		//De esa forma puedo saber que tan paralelo a mi vision esta el jugador
+		float dot = FVector::DotProduct(dirToPlayer, GetActorForwardVector());
+
+		//Si encuentro un jugador cuyo dot es mejor que el mas cercano lo considero el nuevo mas cercano
+		if (dot > nearestDot && dot > detectPlayerRange)
+		{
+			//Calculamos la distancia entre el jugador y yo y si esta dentro del rango de vision lo tengo en cuenta
+			float dist = FVector::Distance(player->GetActorLocation(), GetActorLocation());
+			if (dist <= detectPlayerDistance)
+			{
+				nearestPlayer = player;
+				nearestDot = dot;
+			}
+		}		
+	}
+	return nearestPlayer;
+}

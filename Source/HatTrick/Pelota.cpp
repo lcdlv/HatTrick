@@ -77,7 +77,10 @@ void APelota::OnOverlap(AActor * me, AActor * other)
 	}
 	pelotaMesh->SetSimulatePhysics(false);
 	AttachToActor(other, FAttachmentTransformRules::KeepWorldTransform, FName(TEXT("PelotaSocket")));
-	UE_LOG(LogTemp, Warning, TEXT("Toca"));
+	
+	//auto sarasa = (UStaticMeshComponent*)other->GetComponentByClass(UStaticMeshComponent::StaticClass());
+	//AttachToComponent(sarasa, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName(TEXT("PelotaSocket")));
+
 	ASoccerPlayer* soccerPlayer = Cast<ASoccerPlayer>(other);
 	soccerPlayer->hasBall = true;
 	soccerPlayer->pelotaActor = me;

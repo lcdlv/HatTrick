@@ -13,6 +13,9 @@ class HATTRICK_API ASoccerPlayer : public ACharacter
 {
 	GENERATED_BODY()
 
+private:
+	class AHatTrickGameModeBase* gameMode;
+	class ASoccerPlayer* GetNearestPlayer();
 public:
 	// Sets default values for this pawn's properties
 	ASoccerPlayer();
@@ -63,6 +66,12 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float tiempoDelay;
+
+	UPROPERTY(EditAnywhere)
+	float detectPlayerDistance = 1000;
+
+	UPROPERTY(EditAnywhere)
+	float detectPlayerRange = 0.75;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USceneComponent* RootMesh;
