@@ -4,9 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Components/ShapeComponent.h"
-#include "Components/SphereComponent.h"
 #include "SoccerPlayer.generated.h"
+
+UENUM(BlueprintType)		//"BlueprintType" is essential to include
+enum class ETeamEnum : uint8
+{
+	TE_Buenos 	UMETA(DisplayName = "Buenos"),
+	TE_Malos 	UMETA(DisplayName = "Malos"),
+};
 
 UCLASS()
 class HATTRICK_API ASoccerPlayer : public ACharacter
@@ -16,6 +21,7 @@ class HATTRICK_API ASoccerPlayer : public ACharacter
 private:
 	class AHatTrickGameModeBase* gameMode;
 	class ASoccerPlayer* GetNearestPlayer();
+	
 public:
 	// Sets default values for this pawn's properties
 	ASoccerPlayer();
@@ -37,30 +43,31 @@ public:
 
 	void shot();
 
-	void TimerGenerico();
-
-	void posesion();
+	void TimerGenericoEmpuja();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool hasBall = false;
+	bool hasBall = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool shotball = false;
+	UPROPERTY(EditAnywhere)
+	bool shotball = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool inAnimation = false;
+	UPROPERTY(EditAnywhere)
+	bool inAnimation = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		AActor* pelotaActor;
+	UPROPERTY(EditAnywhere)
+	bool inEmpuja = false;
+
+	UPROPERTY(EditAnywhere)
+	AActor* pelotaActor;
 
 	UPROPERTY()
-		UAnimMontage *ShootMontage;
+	UAnimMontage *ShootMontage;
 
 	UPROPERTY()
-		UAnimMontage *BarridaMontage;
+	UAnimMontage *BarridaMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UShapeComponent* PieCollition;
+	UPROPERTY()
+	UAnimMontage* GolpeadoMontage;
 
 	FTimerHandle timerHander;
 
@@ -71,14 +78,28 @@ public:
 	float detectPlayerDistance = 1000;
 
 	UPROPERTY(EditAnywhere)
+	class UCapsuleComponent* capsulaCustom;
+
+	UPROPERTY(EditAnywhere)
 	float detectPlayerRange = 0.75;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		USceneComponent* RootMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	FVector locationPase = FVector(0,0,0);
+	
+	UPROPERTY(EditAnywhere)
+	ASoccerPlayer* playerTemp;
 
 	int fuerzaPase = 3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Soccer Player")
+	ETeamEnum TeamEnum;
+	
+	void SinPelota();
+
+	void esGolpeado();
+
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 };
 

@@ -26,7 +26,6 @@ APelota::APelota()
 
 	if (fisicaAsset.Succeeded()) {
 		//pelotaMesh->SetPhysMaterialOverride(fisicaAsset.Object);
-		UE_LOG(LogTemp, Warning, TEXT("Entro"));
 	}
 	pelotaMesh->SetSimulatePhysics(true);
 	pelotaMesh->WakeRigidBody();
@@ -39,7 +38,8 @@ void APelota::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OnActorBeginOverlap.AddDynamic(this, &APelota::OnOverlap);
+	OnActorBeginOverlap.AddDynamic(this, &APelota::OnBeginOverlap);
+	OnActorEndOverlap.AddDynamic(this, &APelota::OnEndOverlap);
 
 }
 
@@ -68,11 +68,13 @@ void APelota::Shootea(FVector vector)
 }
 
 
-void APelota::OnOverlap(AActor * me, AActor * other)
+void APelota::OnBeginOverlap(AActor * me, AActor * other)
 {
+	if(jugadorTemp) jugadorTemp->hasBall = false;
 	APlayerController* controllerPlayer = GetWorld()->GetFirstPlayerController();
 	ASoccerPlayerController* soccerController = Cast<ASoccerPlayerController>(controllerPlayer);
-	if (jugadorTemp != nullptr && soccerController != nullptr) {
+	ASoccerPlayer* soccerPlayer = Cast<ASoccerPlayer>(other);
+	if (jugadorTemp != nullptr && soccerController != nullptr && soccerPlayer->TeamEnum == ETeamEnum::TE_Buenos) {
 		soccerController->UnPossess();
 	}
 	pelotaMesh->SetSimulatePhysics(false);
@@ -81,10 +83,17 @@ void APelota::OnOverlap(AActor * me, AActor * other)
 	//auto sarasa = (UStaticMeshComponent*)other->GetComponentByClass(UStaticMeshComponent::StaticClass());
 	//AttachToComponent(sarasa, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName(TEXT("PelotaSocket")));
 
-	ASoccerPlayer* soccerPlayer = Cast<ASoccerPlayer>(other);
+	
 	soccerPlayer->hasBall = true;
 	soccerPlayer->pelotaActor = me;
-	//soccerController->SetActorRelativeLocation(soccerPlayer->GetActorLocation());
-	soccerController->Possess(soccerPlayer);
+	if (soccerPlayer->TeamEnum == ETeamEnum::TE_Buenos) {
+		soccerController->Possess(soccerPlayer);
+	}
 	jugadorTemp = soccerPlayer;
+}
+
+void APelota::OnEndOverlap(AActor * me, AActor * other)
+{
+	ASoccerPlayer* player = Cast<ASoccerPlayer>(other);
+	player->SinPelota();
 }

@@ -15,7 +15,8 @@ class HATTRICK_API AHatTrickGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
-	TArray<class ASoccerPlayer*> players;
+	TArray<class ASoccerPlayer*> playersBuenos;
+	TArray<class ASoccerPlayer*> playersMalos;
 	
 	
 };

@@ -38,7 +38,10 @@ public:
 
 private:
 	UFUNCTION()
-		void OnOverlap(AActor* me, AActor* other);
+		void OnBeginOverlap(AActor* me, AActor* other);
+
+	UFUNCTION()
+		void OnEndOverlap(AActor* me, AActor* other);
 
 
 };
