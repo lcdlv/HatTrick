@@ -76,6 +76,7 @@ void APelota::OnBeginOverlap(AActor * me, AActor * other)
 	ASoccerPlayer* soccerPlayer = Cast<ASoccerPlayer>(other);
 	if (jugadorTemp != nullptr && soccerController != nullptr && soccerPlayer->TeamEnum == ETeamEnum::TE_Buenos) {
 		soccerController->UnPossess();
+		jugadorTemp->isPossessed = false;
 	}
 	pelotaMesh->SetSimulatePhysics(false);
 	AttachToActor(other, FAttachmentTransformRules::KeepWorldTransform, FName(TEXT("PelotaSocket")));
@@ -88,6 +89,7 @@ void APelota::OnBeginOverlap(AActor * me, AActor * other)
 	soccerPlayer->pelotaActor = me;
 	if (soccerPlayer->TeamEnum == ETeamEnum::TE_Buenos) {
 		soccerController->Possess(soccerPlayer);
+		soccerPlayer->isPossessed = true;
 	}
 	jugadorTemp = soccerPlayer;
 }

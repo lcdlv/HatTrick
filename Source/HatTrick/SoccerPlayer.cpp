@@ -8,6 +8,7 @@
 #include "TimerManager.h"
 #include "HatTrickGameModeBase.h"
 #include "Components/CapsuleComponent.h"
+#include "StructYeah.h"
 #include "Components/SkeletalMeshComponent.h"
 
 
@@ -30,6 +31,7 @@ ASoccerPlayer::ASoccerPlayer()
 	capsulaCustom->SetCollisionProfileName(FName("Jugador"));
 	capsulaCustom->SetupAttachment(RootComponent);
 	capsulaCustom->OnComponentBeginOverlap.AddDynamic(this, &ASoccerPlayer::OnOverlapBegin);
+	capsulaCustom->OnComponentEndOverlap.AddDynamic(this, &ASoccerPlayer::OnOverlapEnd);
 	GetMesh()->SetSkeletalMesh(SkeletoObj.Object, false);
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -80));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -63,6 +65,24 @@ void ASoccerPlayer::BeginPlay()
 void ASoccerPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	//chequea el press del boton para la fuerza.
+	if (isPress) {
+		pressed++;
+		UE_LOG(LogTemp, Warning, TEXT("Energia is %d"), pressed);
+	}
+	else {
+		pressed = 0;
+	}
+
+	// hace que siempre mire a la pelota.
+	if (!hasBall && pelotaActor && !isPossessed && !inAnimation){
+
+		FVector diferencia = (pelotaActor->GetActorLocation()) - GetActorLocation();
+		diferencia.Normalize();
+		FRotator rotacion = FRotator(0, diferencia.Rotation().Yaw, 0);
+		SetActorRotation(rotacion);
+	}
 }
 
 // Called to bind functionality to input
@@ -71,7 +91,10 @@ void ASoccerPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	//Super::SetupPlayerInputComponent(PlayerInputComponent);
 	InputComponent->BindAxis("Girar", this, &ASoccerPlayer::girar);
 	InputComponent->BindAxis("Adelante", this, &ASoccerPlayer::adelante);
-	InputComponent->BindAction("Shot", IE_Pressed, this, &ASoccerPlayer::shot);
+	InputComponent->BindAction("Pase", IE_Pressed, this, &ASoccerPlayer::btnPasePress);
+	InputComponent->BindAction("Shot", IE_Pressed, this, &ASoccerPlayer::btnShotPress);
+	InputComponent->BindAction("Pase", IE_Released, this, &ASoccerPlayer::btnPaseRelease);
+	InputComponent->BindAction("Shot", IE_Released, this, &ASoccerPlayer::btnShotRelease);
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 
 }
@@ -91,8 +114,28 @@ void ASoccerPlayer::adelante(float value)
 	AddMovementInput(FVector(1,0,0), value);
 }
 
-void ASoccerPlayer::shot()
+void ASoccerPlayer::btnShotRelease()
 {
+	isPress = false;
+	if (hasBall) {
+		shotball = true;
+		pelotaActor->DetachRootComponentFromParent(true);
+		APelota* pelotaMaldita = Cast<APelota>(pelotaActor);
+		pelotaMaldita->Physic(true);
+		hasBall = false;
+		PlayAnimMontage(ShootMontage, 1.0f);
+		inAnimation = true;
+		tiempoDelay = ShootMontage->GetPlayLength();
+		GetWorldTimerManager().SetTimer(timerHander, this, &ASoccerPlayer::TimerGenericoEmpuja, tiempoDelay);
+		pelotaMaldita->Shootea(GetActorForwardVector()*fuerza()*1000);
+	}
+	else {
+	}
+}
+
+void ASoccerPlayer::btnPaseRelease()
+{
+	isPress = false;
 	if (hasBall) {
 		shotball = true;
 		pelotaActor->DetachRootComponentFromParent(true);
@@ -107,10 +150,10 @@ void ASoccerPlayer::shot()
 		//Magia del pase perfecto
 		ASoccerPlayer* nearestPlayer = GetNearestPlayer();
 		if (nearestPlayer) {
-			locationPase = (nearestPlayer->GetActorLocation() - GetActorLocation())*fuerzaPase;
+			locationPase = (nearestPlayer->GetActorLocation() - GetActorLocation())*fuerza();
 		}
 		else {
-			locationPase = GetActorForwardVector() * 1000;
+			locationPase = GetActorForwardVector() * (fuerza()*500);
 		}
 
 		//pelotaMaldita->Shootea(GetActorForwardVector(), 1000);
@@ -124,6 +167,20 @@ void ASoccerPlayer::shot()
 		tiempoDelay = BarridaMontage->GetPlayLength();
 		GetWorldTimerManager().SetTimer(timerHander, this, &ASoccerPlayer::TimerGenericoEmpuja, tiempoDelay);
 	}
+
+}
+
+void ASoccerPlayer::btnShotPress()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Press"));
+	isPress = true;
+
+}
+
+void ASoccerPlayer::btnPasePress()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Press"));
+	isPress = true;
 }
 
 void ASoccerPlayer::TimerGenericoEmpuja()
@@ -204,6 +261,7 @@ ASoccerPlayer* ASoccerPlayer::GetNearestPlayer()
 }
 
 
+
 void ASoccerPlayer::SinPelota()
 {
 		StopAnimMontage(GetCurrentMontage());
@@ -223,12 +281,29 @@ void ASoccerPlayer::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Verga"));
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
 		playerTemp = Cast<ASoccerPlayer>(OtherActor);
 
 	}
 }
+
+void ASoccerPlayer::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor && (OtherActor != this) && OtherComp)
+	{
+		playerTemp = nullptr;
+
+	}
+}
+
+
+int ASoccerPlayer::fuerza()
+{
+	if (pressed <= 8) fuerzaPase = 2;
+	if (pressed >= 9 && pressed <= 15) fuerzaPase = 3;
+	if (pressed >= 16) fuerzaPase = 4;
+	return fuerzaPase;
+}
+
 
 
 

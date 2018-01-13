@@ -21,7 +21,7 @@ class HATTRICK_API ASoccerPlayer : public ACharacter
 private:
 	class AHatTrickGameModeBase* gameMode;
 	class ASoccerPlayer* GetNearestPlayer();
-	
+
 public:
 	// Sets default values for this pawn's properties
 	ASoccerPlayer();
@@ -41,65 +41,81 @@ public:
 
 	void adelante(float value);
 
-	void shot();
+	void btnShotRelease();
+
+	void btnPaseRelease();
+
+	void btnShotPress();
+
+	void btnPasePress();
 
 	void TimerGenericoEmpuja();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool hasBall = false;
+		bool hasBall = false;
 
 	UPROPERTY(EditAnywhere)
-	bool shotball = false;
+		bool shotball = false;
 
 	UPROPERTY(EditAnywhere)
-	bool inAnimation = false;
+		bool inAnimation = false;
 
 	UPROPERTY(EditAnywhere)
-	bool inEmpuja = false;
+		bool inEmpuja = false;
 
 	UPROPERTY(EditAnywhere)
-	AActor* pelotaActor;
+		AActor* pelotaActor;
 
 	UPROPERTY()
-	UAnimMontage *ShootMontage;
+		UAnimMontage *ShootMontage;
 
 	UPROPERTY()
-	UAnimMontage *BarridaMontage;
+		UAnimMontage *BarridaMontage;
 
 	UPROPERTY()
-	UAnimMontage* GolpeadoMontage;
+		UAnimMontage* GolpeadoMontage;
 
 	FTimerHandle timerHander;
 
 	UPROPERTY(EditAnywhere)
-	float tiempoDelay;
+		float tiempoDelay;
 
 	UPROPERTY(EditAnywhere)
-	float detectPlayerDistance = 1000;
+		float detectPlayerDistance = 1000;
 
 	UPROPERTY(EditAnywhere)
-	class UCapsuleComponent* capsulaCustom;
+		class UCapsuleComponent* capsulaCustom;
 
 	UPROPERTY(EditAnywhere)
-	float detectPlayerRange = 0.75;
+		float detectPlayerRange = 0.6;
 
 	UPROPERTY(EditAnywhere)
-	FVector locationPase = FVector(0,0,0);
-	
+		FVector locationPase = FVector(0, 0, 0);
+
 	UPROPERTY(EditAnywhere)
-	ASoccerPlayer* playerTemp;
+		ASoccerPlayer* playerTemp;
 
 	int fuerzaPase = 3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Soccer Player")
 	ETeamEnum TeamEnum;
-	
+
 	void SinPelota();
 
 	void esGolpeado();
 
+	int pressed = 0;
+
+	bool isPress = false;
+
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	bool isPossessed;
+
+	int fuerza();
 };
 
