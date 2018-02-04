@@ -14,5 +14,17 @@ class HATTRICK_API ASoccerPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
+private:
+	class AHatTrickGameModeBase* gameMode;
+
+public:
+
+	void checkChange(class APelota* pelota);
+
+	UPROPERTY(EditAnywhere)
+	float detectPlayerRange = 0.6;
 };

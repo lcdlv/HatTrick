@@ -25,7 +25,7 @@ APelota::APelota()
 	pelotaMesh->SetCollisionProfileName(FName("Pelota"));
 
 	if (fisicaAsset.Succeeded()) {
-		//pelotaMesh->SetPhysMaterialOverride(fisicaAsset.Object);
+		pelotaMesh->SetPhysMaterialOverride(fisicaAsset.Object);
 	}
 	pelotaMesh->SetSimulatePhysics(true);
 	pelotaMesh->WakeRigidBody();
@@ -70,23 +70,24 @@ void APelota::Shootea(FVector vector)
 
 void APelota::OnBeginOverlap(AActor * me, AActor * other)
 {
+	//si alguien la tenia antes, le saca el bool a hasball
 	if(jugadorTemp) jugadorTemp->hasBall = false;
+	//castea controller
 	APlayerController* controllerPlayer = GetWorld()->GetFirstPlayerController();
 	ASoccerPlayerController* soccerController = Cast<ASoccerPlayerController>(controllerPlayer);
-	ASoccerPlayer* soccerPlayer = Cast<ASoccerPlayer>(other);
+	//castea el player con el que choca
+	soccerPlayer = Cast<ASoccerPlayer>(other);
+	//Si ovelapea con uno de los nuestros desposee el anterior y possee el nuevo. Sino, nunca lo desposee por lo que
+	//seguimos usando el que estabamos usando.
 	if (jugadorTemp != nullptr && soccerController != nullptr && soccerPlayer->TeamEnum == ETeamEnum::TE_Buenos) {
 		soccerController->UnPossess();
 		jugadorTemp->isPossessed = false;
 	}
 	pelotaMesh->SetSimulatePhysics(false);
 	AttachToActor(other, FAttachmentTransformRules::KeepWorldTransform, FName(TEXT("PelotaSocket")));
-	
-	//auto sarasa = (UStaticMeshComponent*)other->GetComponentByClass(UStaticMeshComponent::StaticClass());
-	//AttachToComponent(sarasa, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName(TEXT("PelotaSocket")));
-
-	
 	soccerPlayer->hasBall = true;
 	soccerPlayer->pelotaActor = me;
+	//Posee para manejar solo si choca con uno de los nuestros
 	if (soccerPlayer->TeamEnum == ETeamEnum::TE_Buenos) {
 		soccerController->Possess(soccerPlayer);
 		soccerPlayer->isPossessed = true;

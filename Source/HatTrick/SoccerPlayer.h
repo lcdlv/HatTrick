@@ -49,6 +49,8 @@ public:
 
 	void btnPasePress();
 
+	void btnChange();
+
 	void TimerGenericoEmpuja();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

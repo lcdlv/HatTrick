@@ -36,12 +36,13 @@ public:
 
 	void Shootea(FVector vector);
 
+	ASoccerPlayer* soccerPlayer;
+
 private:
 	UFUNCTION()
 		void OnBeginOverlap(AActor* me, AActor* other);
 
 	UFUNCTION()
 		void OnEndOverlap(AActor* me, AActor* other);
-
 
 };

@@ -4,11 +4,11 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Pelota.h"
+#include "SoccerPlayerController.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "TimerManager.h"
 #include "HatTrickGameModeBase.h"
 #include "Components/CapsuleComponent.h"
-#include "StructYeah.h"
 #include "Components/SkeletalMeshComponent.h"
 
 
@@ -75,13 +75,14 @@ void ASoccerPlayer::Tick(float DeltaTime)
 		pressed = 0;
 	}
 
-	// hace que siempre mire a la pelota.
+	// hace que siempre mire a la pelota. Tambien hace que se posea el player si esta cerca
 	if (!hasBall && pelotaActor && !isPossessed && !inAnimation){
 
 		FVector diferencia = (pelotaActor->GetActorLocation()) - GetActorLocation();
 		diferencia.Normalize();
 		FRotator rotacion = FRotator(0, diferencia.Rotation().Yaw, 0);
 		SetActorRotation(rotacion);
+		
 	}
 }
 
@@ -95,9 +96,23 @@ void ASoccerPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	InputComponent->BindAction("Shot", IE_Pressed, this, &ASoccerPlayer::btnShotPress);
 	InputComponent->BindAction("Pase", IE_Released, this, &ASoccerPlayer::btnPaseRelease);
 	InputComponent->BindAction("Shot", IE_Released, this, &ASoccerPlayer::btnShotRelease);
+	InputComponent->BindAction("Change", IE_Pressed, this, &ASoccerPlayer::btnChange);
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 
 }
+
+void ASoccerPlayer::btnChange()
+{
+	/*if (!hasBall) {
+		UE_LOG(LogTemp, Warning, TEXT("Change"));
+		APlayerController* controllerPlayer = GetWorld()->GetFirstPlayerController();
+		ASoccerPlayerController* soccerController = Cast<ASoccerPlayerController>(controllerPlayer);
+		APelota* pelotaMaldita = Cast<APelota>(pelotaActor);
+		soccerController->checkChange(pelotaMaldita);
+	}*/
+	
+}
+
 
 void ASoccerPlayer::girar(float value)
 {
