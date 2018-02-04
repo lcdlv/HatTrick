@@ -18,10 +18,10 @@ class HATTRICK_API UAnimPlayer : public UAnimInstance
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool HasBallLocal;
+	bool HasBallLocal;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float Velocidad;
+	float Velocidad;
 
 };
 

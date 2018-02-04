@@ -103,13 +103,16 @@ void ASoccerPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ASoccerPlayer::btnChange()
 {
-	/*if (!hasBall) {
-		UE_LOG(LogTemp, Warning, TEXT("Change"));
+	if (!hasBall) {
+		
 		APlayerController* controllerPlayer = GetWorld()->GetFirstPlayerController();
 		ASoccerPlayerController* soccerController = Cast<ASoccerPlayerController>(controllerPlayer);
-		APelota* pelotaMaldita = Cast<APelota>(pelotaActor);
-		soccerController->checkChange(pelotaMaldita);
-	}*/
+		if (pelotaActor != nullptr) {
+			UE_LOG(LogTemp, Warning, TEXT("Change"));
+			APelota* pelotaMaldita = Cast<APelota>(pelotaActor);
+			soccerController->checkChange(pelotaMaldita);
+		}
+	}
 	
 }
 

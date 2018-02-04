@@ -29,6 +29,11 @@ void ASoccerPlayerController::checkChange(APelota* pelota) {
 			nearestPlayer = player;
 			distTemp = dist;
 		}
+		else {
+			player->isPossessed = false;
+			player->SinPelota();
+		}
 	}
-	nearestPlayer->PossessedBy(this);
+	Possess(nearestPlayer);
+	nearestPlayer->isPossessed = true;
 }
