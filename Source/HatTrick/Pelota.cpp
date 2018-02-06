@@ -25,7 +25,7 @@ APelota::APelota()
 	pelotaMesh->SetCollisionProfileName(FName("Pelota"));
 
 	if (fisicaAsset.Succeeded()) {
-		pelotaMesh->SetPhysMaterialOverride(fisicaAsset.Object);
+		//pelotaMesh->SetPhysMaterialOverride(fisicaAsset.Object);
 	}
 	pelotaMesh->SetSimulatePhysics(true);
 	pelotaMesh->WakeRigidBody();
