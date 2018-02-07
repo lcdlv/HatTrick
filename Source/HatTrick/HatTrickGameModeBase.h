@@ -18,5 +18,10 @@ public:
 	TArray<class ASoccerPlayer*> playersBuenos;
 	TArray<class ASoccerPlayer*> playersMalos;
 	
+	UPROPERTY(EditAnywhere)
+	int GolBuenos = 0;
+
+	UPROPERTY(EditAnywhere)
+	int GolMalos = 0;
 	
 };
