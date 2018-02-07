@@ -53,9 +53,11 @@ void ASoccerPlayer::BeginPlay()
 		switch (TeamEnum) {
 			case ETeamEnum::TE_Buenos: {
 				gameMode->playersBuenos.Add(this);
+				break;
 			}
 			case ETeamEnum::TE_Malos: {
 				gameMode->playersMalos.Add(this);
+				break;
 			}
 		}	
 	}
