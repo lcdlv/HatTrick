@@ -22,7 +22,11 @@ ASoccerPlayer::ASoccerPlayer()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> GolpeadoMontageObj(TEXT("/Game/Mesh/cambio_sentido_Montage"));
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletoObj(TEXT("/Game/Mesh/player"));
 	static ConstructorHelpers::FObjectFinder<UClass> animationBlueprint(TEXT("/Game/MyAnimPlayer.MyAnimPlayer_C"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialBuenoObj(TEXT("/Game/Mesh/Matblanco"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialMaloObj(TEXT("/Game/Mesh/Matnegro"));
 
+	materialBueno = MaterialBuenoObj.Object;
+	materialMalo = MaterialMaloObj.Object;
 	ShootMontage = ShootMontageObj.Object;
 	BarridaMontage = BarridaMontageObj.Object;
 	GolpeadoMontage = GolpeadoMontageObj.Object;
@@ -53,10 +57,12 @@ void ASoccerPlayer::BeginPlay()
 		switch (TeamEnum) {
 			case ETeamEnum::TE_Buenos: {
 				gameMode->playersBuenos.Add(this);
+				GetMesh()->SetMaterial(0, materialBueno);
 				break;
 			}
 			case ETeamEnum::TE_Malos: {
 				gameMode->playersMalos.Add(this);
+				GetMesh()->SetMaterial(0, materialMalo);
 				break;
 			}
 		}	

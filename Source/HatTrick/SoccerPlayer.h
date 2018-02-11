@@ -119,5 +119,11 @@ public:
 	bool isPossessed;
 
 	int fuerza();
+
+	UPROPERTY(EditAnywhere)
+	UMaterialInterface* materialBueno;
+
+	UPROPERTY(EditAnywhere)
+	UMaterialInterface* materialMalo;
 };
 

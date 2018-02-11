@@ -30,7 +30,7 @@ public:
 		UStaticMeshComponent* pelotaMesh;
 
 	UPROPERTY(VisibleAnywhere)
-		class ASoccerPlayer* jugadorTemp;
+	class ASoccerPlayer* jugadorTemp;
 
 	void Physic(bool activado);
 

@@ -24,6 +24,7 @@ private:
 public:
 
 	void checkChange(class APelota* pelota);
+	void checkChange(FVector posicionSaque, bool playerBueno, class APelota* pelota);
 
 	UPROPERTY(EditAnywhere)
 	float detectPlayerRange = 0.6;
