@@ -4,6 +4,7 @@
 #include "HatTrickGameModeBase.h"
 #include "Engine/World.h"
 #include "Pelota.h"
+#include "TimerManager.h"
 #include "SoccerPlayer.h"
 
 
@@ -38,6 +39,32 @@ void ASoccerPlayerController::checkChange(APelota* pelota) {
 	Possess(nearestPlayer);
 	nearestPlayer->isPossessed = true;
 }
+
+void ASoccerPlayerController::checkChange(FVector lugar) {
+
+	ASoccerPlayer* nearestPlayer = nullptr;
+	float distTemp = 10000000;
+
+	//Esto hace que sea solo Single Player ya que siempre serias de los buenos.
+	for (int i = 0; i < gameMode->playersBuenos.Num(); i++)
+	{
+		ASoccerPlayer* player = gameMode->playersBuenos[i];
+
+		float dist = FVector::Distance(player->GetActorLocation(), lugar);
+		if (dist <= distTemp)
+		{
+			nearestPlayer = player;
+			distTemp = dist;
+		}
+		else {
+			player->isPossessed = false;
+			player->SinPelota();
+		}
+	}
+	Possess(nearestPlayer);
+	nearestPlayer->isPossessed = true;
+}
+
 
 void ASoccerPlayerController::checkChange(FVector posicionSaque, bool playerBueno, APelota* pelota) {
 

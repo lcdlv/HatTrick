@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/TriggerBox.h"
+#include "EstadosEnum.h"
 #include "MyTriggerGoal.generated.h"
 
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
@@ -28,6 +29,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipo")
 	EEquipoEnum TeamEnum;
 	
+	EnumEstadosJuego estado;
 
 protected:
 	// Called when the game starts or when spawned

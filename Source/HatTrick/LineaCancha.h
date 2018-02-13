@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EstadosEnum.h"
 #include "LineaCancha.generated.h"
 
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
@@ -15,6 +16,7 @@ enum class ELineaLateral : uint8
 	Fondo_Malos 	UMETA(DisplayName = "Fondo Malos"),
 };
 
+
 UCLASS()
 class HATTRICK_API ALineaCancha : public AActor
 {
@@ -23,6 +25,13 @@ class HATTRICK_API ALineaCancha : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ALineaCancha();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+private:
+	class AHatTrickGameModeBase* gameMode;
 
 public:	
 
@@ -37,4 +46,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	ELineaLateral lateralEnum;
+
+	EnumEstadosJuego estado;
+
+	void salePelotaLateral(APelota* laPelota, FVector pelotaInterseccionLinea);
 };

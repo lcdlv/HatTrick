@@ -13,6 +13,25 @@ enum class ETeamEnum : uint8
 	TE_Malos 	UMETA(DisplayName = "Malos"),
 };
 
+UENUM(BlueprintType)		//"BlueprintType" is essential to include
+enum class EnumPlayerPosicionesLocal : uint8
+{
+	Arquero 				UMETA(DisplayName = "Arquero"),
+	Defensa1			 	UMETA(DisplayName = "Defensa1"),
+	Defensa2 				UMETA(DisplayName = "Defensa2"),
+	Defensa3	 			UMETA(DisplayName = "Defensa3"),
+	Defensa4 				UMETA(DisplayName = "Defensa4"),
+	Mediocampo1 			UMETA(DisplayName = "Mediocampo1"),
+	Mediocampo2 			UMETA(DisplayName = "Mediocampo2"),
+	Mediocampo3 			UMETA(DisplayName = "Mediocampo3"),
+	Mediocampo4 			UMETA(DisplayName = "Mediocampo4"),
+	Mediocampo5 			UMETA(DisplayName = "Mediocampo5"),
+	Ataque1 				UMETA(DisplayName = "Ataque1"),
+	Ataque2 				UMETA(DisplayName = "Ataque2"),
+	Ataque3 				UMETA(DisplayName = "Ataque3"),
+	Ataque4 				UMETA(DisplayName = "Ataque4"),
+};
+
 UCLASS()
 class HATTRICK_API ASoccerPlayer : public ACharacter
 {
@@ -125,5 +144,14 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UMaterialInterface* materialMalo;
+
+	UPROPERTY(EditAnywhere)
+	EnumPlayerPosicionesLocal PosicionCancha = EnumPlayerPosicionesLocal::Arquero;
+
+	UPROPERTY(EditAnywhere)
+	class APosicionPlayerSystem* posicionActor;
+
+	UFUNCTION()
+	void ConversorEnumPosicion(EnumPlayerPosicionesLocal PlaceCancha);
 };
 

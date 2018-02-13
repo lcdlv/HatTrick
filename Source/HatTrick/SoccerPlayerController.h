@@ -25,7 +25,11 @@ public:
 
 	void checkChange(class APelota* pelota);
 	void checkChange(FVector posicionSaque, bool playerBueno, class APelota* pelota);
+	
+	UFUNCTION(BlueprintCallable)
+	void checkChange(FVector lugar);
 
 	UPROPERTY(EditAnywhere)
 	float detectPlayerRange = 0.6;
+
 };

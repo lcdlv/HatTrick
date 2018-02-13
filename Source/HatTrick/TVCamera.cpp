@@ -20,6 +20,6 @@ void ATVCamera::BeginPlay()
 void ATVCamera::TimerGenerico()
 {
 	if (pelota != nullptr) {
-	SetActorLocation(FVector(-720, pelota->GetActorLocation().Y, 360));
+	SetActorLocation(FVector(-1040, pelota->GetActorLocation().Y, 360));
 	}
 }

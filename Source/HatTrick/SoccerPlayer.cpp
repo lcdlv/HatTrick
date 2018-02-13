@@ -8,6 +8,7 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "TimerManager.h"
 #include "HatTrickGameModeBase.h"
+#include "PosicionPlayerSystem.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
@@ -50,8 +51,7 @@ ASoccerPlayer::ASoccerPlayer()
 void ASoccerPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	
+
 	gameMode = Cast<AHatTrickGameModeBase>(GetWorld()->GetAuthGameMode());
 	if (gameMode) {
 		switch (TeamEnum) {
@@ -66,6 +66,51 @@ void ASoccerPlayer::BeginPlay()
 				break;
 			}
 		}	
+	}
+	switch (PosicionCancha)
+	{
+	case EnumPlayerPosicionesLocal::Arquero:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Arquero, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Defensa1:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Defensa1, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Defensa2:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Defensa2, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Defensa3:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Defensa3, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Defensa4:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Defensa4, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Mediocampo1:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Mediocampo1, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Mediocampo2:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Mediocampo2, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Mediocampo3:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Mediocampo3, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Mediocampo4:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Mediocampo4, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Mediocampo5:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Mediocampo5, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Ataque1:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Ataque1, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Ataque2:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Ataque2, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Ataque3:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Ataque3, TeamEnum));
+		break;
+	case EnumPlayerPosicionesLocal::Ataque4:
+		SetActorLocation(posicionActor->PlayerPosition(EnumPlayerPosiciones::Ataque4, TeamEnum));
+		break;
 	}
 }
 
@@ -328,6 +373,10 @@ int ASoccerPlayer::fuerza()
 	if (pressed >= 9 && pressed <= 15) fuerzaPase = 3;
 	if (pressed >= 16) fuerzaPase = 4;
 	return fuerzaPase;
+}
+
+void ASoccerPlayer::ConversorEnumPosicion(EnumPlayerPosicionesLocal PlaceCancha)
+{
 }
 
 
