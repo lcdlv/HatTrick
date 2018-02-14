@@ -23,13 +23,7 @@ private:
 
 public:
 
-	void checkChange(class APelota* pelota);
-	void checkChange(FVector posicionSaque, bool playerBueno, class APelota* pelota);
-	
-	UFUNCTION(BlueprintCallable)
-	void checkChange(FVector lugar);
+	FTimerHandle timerHander;
 
-	UPROPERTY(EditAnywhere)
-	float detectPlayerRange = 0.6;
-
+	void TimerGenerico();
 };

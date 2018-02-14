@@ -40,7 +40,7 @@ public:
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	void PosicionarJugadorSaque(bool equipoBueno, class APelota* pelota, class ASoccerPlayer* player, FVector posicion);
+	void PosicionarJugadorSaque(bool equipoBueno, class APelota* pelota, class ASoccerPlayer* player, FVector posicion, EnumEstadosJuego estadoGame);
 
 	FVector pelotaInterseccionLinea;
 
@@ -49,5 +49,5 @@ public:
 
 	EnumEstadosJuego estado;
 
-	void salePelotaLateral(APelota* laPelota, FVector pelotaInterseccionLinea);
+	void salePelotaLateral(APelota* laPelota, FVector pelotaInterseccionLinea, EnumEstadosJuego estadoGame);
 };

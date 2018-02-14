@@ -135,7 +135,6 @@ void ASoccerPlayer::Tick(float DeltaTime)
 		diferencia.Normalize();
 		FRotator rotacion = FRotator(0, diferencia.Rotation().Yaw, 0);
 		SetActorRotation(rotacion);
-		
 	}
 }
 
@@ -157,13 +156,10 @@ void ASoccerPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void ASoccerPlayer::btnChange()
 {
 	if (!hasBall) {
-		
-		APlayerController* controllerPlayer = GetWorld()->GetFirstPlayerController();
-		ASoccerPlayerController* soccerController = Cast<ASoccerPlayerController>(controllerPlayer);
 		if (pelotaActor != nullptr) {
 			UE_LOG(LogTemp, Warning, TEXT("Change"));
 			APelota* pelotaMaldita = Cast<APelota>(pelotaActor);
-			soccerController->checkChange(pelotaMaldita);
+			gameMode->checkChange(pelotaMaldita);
 		}
 	}
 	
@@ -243,14 +239,11 @@ void ASoccerPlayer::btnPaseRelease()
 
 void ASoccerPlayer::btnShotPress()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Press"));
 	isPress = true;
-
 }
 
 void ASoccerPlayer::btnPasePress()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Press"));
 	isPress = true;
 }
 
@@ -362,7 +355,6 @@ void ASoccerPlayer::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		playerTemp = nullptr;
-
 	}
 }
 
@@ -375,9 +367,6 @@ int ASoccerPlayer::fuerza()
 	return fuerzaPase;
 }
 
-void ASoccerPlayer::ConversorEnumPosicion(EnumPlayerPosicionesLocal PlaceCancha)
-{
-}
 
 
 

@@ -39,13 +39,13 @@ void ALineaCancha::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor *
 	case ELineaLateral::Lateral_Abajo:
 		estado = EnumEstadosJuego::Saque_Lateral_Abajo;
 		gameMode->OnEstadoChange.Broadcast(estado);
-		salePelotaLateral(laPelota, pelotaInterseccionLinea);
+		salePelotaLateral(laPelota, pelotaInterseccionLinea, estado);
 		break;
 
 	case ELineaLateral::Lateral_Arriba:
 		estado = EnumEstadosJuego::Saque_Lateral_Arriba;
 		gameMode->OnEstadoChange.Broadcast(estado);
-		salePelotaLateral(laPelota, pelotaInterseccionLinea);
+		salePelotaLateral(laPelota, pelotaInterseccionLinea, estado);
 		break;
 	
 	case ELineaLateral::Fondo_Buenos:
@@ -62,24 +62,22 @@ void ALineaCancha::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor *
 	}
 }
 
-void ALineaCancha::PosicionarJugadorSaque(bool equipoBueno, APelota* pelota, ASoccerPlayer* player, FVector posicion)
+void ALineaCancha::PosicionarJugadorSaque(bool equipoBueno, APelota* pelota, ASoccerPlayer* player, FVector posicion, EnumEstadosJuego estadoGame)
 {
 	FVector posicionFinal = FVector(posicion.X, posicion.Y, 18);
-	APlayerController* controllerPlayer = player->GetWorld()->GetFirstPlayerController();
-	ASoccerPlayerController* soccerController = Cast<ASoccerPlayerController>(controllerPlayer);
-	soccerController->checkChange(posicionFinal, equipoBueno, pelota);
+	gameMode->checkChange(posicionFinal, equipoBueno, pelota, estado);
 }
 
 
-void ALineaCancha::salePelotaLateral(APelota * laPelota, FVector pelotaInterseccionLinea)
+void ALineaCancha::salePelotaLateral(APelota * laPelota, FVector pelotaInterseccionLinea, EnumEstadosJuego estadoGame)
 {
 	if (laPelota->jugadorTemp->TeamEnum == ETeamEnum::TE_Buenos) {
 		//sacarian los malos que son false, porque lo tiro un bueno
-		PosicionarJugadorSaque(false, laPelota, laPelota->jugadorTemp, pelotaInterseccionLinea);
+		PosicionarJugadorSaque(false, laPelota, laPelota->jugadorTemp, pelotaInterseccionLinea, estadoGame);
 	}
 	else {
 		//sacarian los buenos que son true
-		PosicionarJugadorSaque(true, laPelota, laPelota->jugadorTemp, pelotaInterseccionLinea);
+		PosicionarJugadorSaque(true, laPelota, laPelota->jugadorTemp, pelotaInterseccionLinea, estadoGame);
 	}
 }
 

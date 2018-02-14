@@ -150,8 +150,5 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class APosicionPlayerSystem* posicionActor;
-
-	UFUNCTION()
-	void ConversorEnumPosicion(EnumPlayerPosicionesLocal PlaceCancha);
 };
 

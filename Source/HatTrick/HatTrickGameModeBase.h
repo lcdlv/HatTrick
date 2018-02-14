@@ -40,5 +40,18 @@ public:
 	UFUNCTION()
 	void RunDispatcherEstados(EnumEstadosJuego estado);
 
+	void checkChange(class APelota* pelota);
+
+	void checkChange(FVector posicionSaque, bool playerBueno, class APelota* pelota, EnumEstadosJuego estadoGame);
+
+	void checkChange(FVector lugar);
+
+	UPROPERTY(EditAnywhere)
+	float detectPlayerRange = 0.6;
+
+	class APlayerController* controllerPlayer;
+
+	class ASoccerPlayerController* soccerController;
+
 	
 };
