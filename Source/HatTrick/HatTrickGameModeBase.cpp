@@ -23,7 +23,6 @@ void AHatTrickGameModeBase::BeginPlay()
 
 void AHatTrickGameModeBase::RunDispatcherEstados(EnumEstadosJuego estado)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Estado %d"), estado);
 	estadoGame = estado;
 }
 

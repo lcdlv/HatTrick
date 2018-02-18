@@ -6,6 +6,7 @@
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Engine/World.h"
+#include "HatTrickGameModeBase.h"
 #include "SoccerPlayerController.h"
 
 
@@ -38,6 +39,7 @@ void APelota::BeginPlay()
 {
 	Super::BeginPlay();
 
+	gameMode = Cast<AHatTrickGameModeBase>(GetWorld()->GetAuthGameMode());
 	OnActorBeginOverlap.AddDynamic(this, &APelota::OnBeginOverlap);
 	OnActorEndOverlap.AddDynamic(this, &APelota::OnEndOverlap);
 
@@ -87,7 +89,8 @@ void APelota::OnBeginOverlap(AActor * me, AActor * other)
 			pelotaMesh->SetSimulatePhysics(false);
 			AttachToActor(other, FAttachmentTransformRules::KeepWorldTransform, FName(TEXT("PelotaSocket")));
 			soccerPlayer->hasBall = true;
-			soccerPlayer->pelotaActor = me;
+			soccerPlayer->pelotaActor = Cast<APelota>(me);
+			gameMode->OnEstrategiaChange.Broadcast(soccerPlayer->TeamEnum);
 			//Posee para manejar solo si choca con uno de los nuestros
 			if (soccerPlayer->TeamEnum == ETeamEnum::TE_Buenos) {
 				soccerController->Possess(soccerPlayer);

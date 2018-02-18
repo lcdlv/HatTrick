@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "EstadosEnum.h"
+#include "SoccerPlayer.h"
 #include "HatTrickGameModeBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEstadoDispatcher, EnumEstadosJuego, EstadoGame);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEstrategiaDispatcher, ETeamEnum, EstrategiaGame);
 
 UCLASS()
 class HATTRICK_API AHatTrickGameModeBase : public AGameModeBase
@@ -53,5 +54,8 @@ public:
 
 	class ASoccerPlayerController* soccerController;
 
-	
+	UPROPERTY(BlueprintAssignable, Category = "EventDispatcher")
+	FEstrategiaDispatcher OnEstrategiaChange;
+
+
 };

@@ -19,6 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	class AHatTrickGameModeBase* gameMode;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -29,14 +32,14 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* pelotaMesh;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	class ASoccerPlayer* jugadorTemp;
 
 	void Physic(bool activado);
 
 	void Shootea(FVector vector);
 
-	ASoccerPlayer* soccerPlayer;
+	class ASoccerPlayer* soccerPlayer;
 
 private:
 	UFUNCTION()

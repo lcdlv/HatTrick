@@ -122,4 +122,7 @@ public:
 	FVector PlayerPosition(EnumPlayerPosiciones posicion, ETeamEnum equipo);
 
 	FVector posicionStart;
+
+	UPROPERTY(EditAnywhere)
+	AActor* pelota;
 };

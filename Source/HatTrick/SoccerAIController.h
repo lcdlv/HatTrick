@@ -14,6 +14,7 @@ class HATTRICK_API ASoccerAIController : public AAIController
 {
 	GENERATED_BODY()
 	
+virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 	
 private:
 	class AHatTrickGameModeBase* gameMode;
@@ -38,4 +39,13 @@ public:
 	FTimerHandle timerHander;
 
 	void TimerGenerico();
+
+	void MoverPersonaje();
+
+	void Moverlocation(FVector lugar);
+
+	void TimerVuelve();
+
+	bool volviendoPosicion = false;
+
 };

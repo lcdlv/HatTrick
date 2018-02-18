@@ -85,7 +85,7 @@ public:
 		bool inEmpuja = false;
 
 	UPROPERTY(EditAnywhere)
-		AActor* pelotaActor;
+		class APelota* pelotaActor;
 
 	UPROPERTY()
 		UAnimMontage *ShootMontage;
@@ -106,6 +106,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		class UCapsuleComponent* capsulaCustom;
+	
+	UPROPERTY(EditAnywhere)
+		class UCapsuleComponent* capsulaIA;
 
 	UPROPERTY(EditAnywhere)
 		float detectPlayerRange = 0.6;
@@ -135,6 +138,12 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION()
+	void OnOverlapIABegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapIAEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 	bool isPossessed;
 
 	int fuerza();
@@ -150,5 +159,18 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class APosicionPlayerSystem* posicionActor;
+
+	FVector posicionDefault;
+
+	bool NotMovement = true;
+
+	class ASoccerAIController* AIPlayerController;
+
+	bool capsulaIAOverlap = false;
+
+	FVector estrategiaAtaque = FVector(0, 500, 0);
+	
+	UFUNCTION()
+		void RunDispatcherEstrategia(ETeamEnum equipo);
 };
 
