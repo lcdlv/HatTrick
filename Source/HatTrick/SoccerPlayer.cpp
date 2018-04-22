@@ -51,13 +51,13 @@ ASoccerPlayer::ASoccerPlayer()
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
-	//Crea capsula para deteccion de enemigos
-	capsulaIA = CreateAbstractDefaultSubobject<UCapsuleComponent>(TEXT("CapsulaIA"));
-	capsulaIA->InitCapsuleSize(300.f, 300.0f);
-	capsulaIA->SetCollisionProfileName(FName("VePelota"));
-	capsulaIA->SetupAttachment(RootComponent);
-	capsulaIA->OnComponentBeginOverlap.AddDynamic(this, &ASoccerPlayer::OnOverlapIABegin);
-	capsulaIA->OnComponentEndOverlap.AddDynamic(this, &ASoccerPlayer::OnOverlapIAEnd);
+	////Crea capsula para deteccion de enemigos
+	//capsulaIA = CreateAbstractDefaultSubobject<UCapsuleComponent>(TEXT("CapsulaIA"));
+	//capsulaIA->InitCapsuleSize(300.f, 300.0f);
+	//capsulaIA->SetCollisionProfileName(FName("VePelota"));
+	//capsulaIA->SetupAttachment(RootComponent);
+	//capsulaIA->OnComponentBeginOverlap.AddDynamic(this, &ASoccerPlayer::OnOverlapIABegin);
+	//capsulaIA->OnComponentEndOverlap.AddDynamic(this, &ASoccerPlayer::OnOverlapIAEnd);
 }
 
 // Called when the game starts or when spawned
@@ -428,33 +428,33 @@ void ASoccerPlayer::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	}
 }
 
-void ASoccerPlayer::OnOverlapIABegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-	if (TeamEnum == ETeamEnum::TE_Malos && AIPlayerController && !hasBall && pelotaActor->jugadorTemp->TeamEnum != ETeamEnum::TE_Malos) {
-		
-		if (NotMovement) {
-			UE_LOG(LogTemp, Warning, TEXT("BeginIA"));
-			//La idea de esta variable es que cuando este true. Es un recoveco para saber mientras esta en colision.
-			capsulaIAOverlap = true;
-			AIPlayerController->MoverPersonaje();
-		}
-	}
-}
+//void ASoccerPlayer::OnOverlapIABegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+//{
+//	if (TeamEnum == ETeamEnum::TE_Malos && AIPlayerController && !hasBall && pelotaActor->jugadorTemp->TeamEnum != ETeamEnum::TE_Malos) {
+//		
+//		if (NotMovement) {
+//			UE_LOG(LogTemp, Warning, TEXT("BeginIA"));
+//			//La idea de esta variable es que cuando este true. Es un recoveco para saber mientras esta en colision.
+//			capsulaIAOverlap = true;
+//			AIPlayerController->MoverPersonaje();
+//		}
+//	}
+//}
 
-void ASoccerPlayer::OnOverlapIAEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
-{
-	if (TeamEnum == ETeamEnum::TE_Malos && AIPlayerController && !hasBall && pelotaActor->jugadorTemp->TeamEnum != ETeamEnum::TE_Malos) {
-		
-		if (NotMovement) {
-			UE_LOG(LogTemp, Warning, TEXT("EndIA"));
-			NotMovement = false;
-			capsulaIAOverlap = false;
-			//Hace que vuelva a la posicion default de ese momento.
-			AIPlayerController->Moverlocation(posicionDefault);
-		}
-		
-	}
-}
+//void ASoccerPlayer::OnOverlapIAEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+//{
+//	if (TeamEnum == ETeamEnum::TE_Malos && AIPlayerController && !hasBall && pelotaActor->jugadorTemp->TeamEnum != ETeamEnum::TE_Malos) {
+//		
+//		if (NotMovement) {
+//			UE_LOG(LogTemp, Warning, TEXT("EndIA"));
+//			NotMovement = false;
+//			capsulaIAOverlap = false;
+//			//Hace que vuelva a la posicion default de ese momento.
+//			AIPlayerController->Moverlocation(posicionDefault);
+//		}
+//		
+//	}
+//}
 
 
 //Deacuerdo a cuanto llego con la carga larga el golpe.
@@ -468,56 +468,56 @@ int ASoccerPlayer::fuerza()
 
 void ASoccerPlayer::RunDispatcherEstrategia(ETeamEnum equipo)
 {
-	if (equipo == TeamEnum && pelotaActor->jugadorTemp->TeamEnum != TeamEnum) {
-		//Si es mi equipo paso al ataque
-		
-		switch (TeamEnum) {
-			case ETeamEnum::TE_Buenos: {
-				//Pasa al ataque el equipo Bueno
-				UE_LOG(LogTemp, Warning, TEXT("Pasa al ataque los Buenos"));
-				posicionDefault = posicionDefault + estrategiaAtaque;
-				break;
-			}
-			case ETeamEnum::TE_Malos: {
-				//Pasa al ataque el equipo Malo
-				UE_LOG(LogTemp, Warning, TEXT("Pasa al ataque los Malo"));
-				posicionDefault = posicionDefault - estrategiaAtaque;
-				break;
-			}
-		}
-		
-		if (AIPlayerController && NotMovement) {
-			NotMovement = false;
-			capsulaIAOverlap = false;
-			//Hace que vuelva a la posicion default de ese momento.
-			AIPlayerController->Moverlocation(posicionDefault);
-		}
-	}
-	if (equipo != TeamEnum && pelotaActor->jugadorTemp->TeamEnum == TeamEnum) {
-		//No soy yo, por lo que paso a defensa
-				switch (TeamEnum) {
-				case ETeamEnum::TE_Buenos: {
-					//Pasa al defensa el equipo Bueno
-					UE_LOG(LogTemp, Warning, TEXT("Pasa a defensa los Buenos"));
-					posicionDefault = posicionDefault - estrategiaAtaque;
-					break;
-				}
-				case ETeamEnum::TE_Malos: {
-					//Pasa al defensa el equipo Malos
-					UE_LOG(LogTemp, Warning, TEXT("Pasa a defensa los Malos"));
-					posicionDefault = posicionDefault + estrategiaAtaque;
-					break;
-				}
-				}
+	//if (equipo == TeamEnum && pelotaActor->jugadorTemp->TeamEnum != TeamEnum) {
+	//	//Si es mi equipo paso al ataque
+	//	
+	//	switch (TeamEnum) {
+	//		case ETeamEnum::TE_Buenos: {
+	//			//Pasa al ataque el equipo Bueno
+	//			UE_LOG(LogTemp, Warning, TEXT("Pasa al ataque los Buenos"));
+	//			posicionDefault = posicionDefault + estrategiaAtaque;
+	//			break;
+	//		}
+	//		case ETeamEnum::TE_Malos: {
+	//			//Pasa al ataque el equipo Malo
+	//			UE_LOG(LogTemp, Warning, TEXT("Pasa al ataque los Malo"));
+	//			posicionDefault = posicionDefault - estrategiaAtaque;
+	//			break;
+	//		}
+	//	}
+	//	
+	//	if (AIPlayerController && NotMovement) {
+	//		NotMovement = false;
+	//		//capsulaIAOverlap = false;
+	//		//Hace que vuelva a la posicion default de ese momento.
+	//		AIPlayerController->Moverlocation(posicionDefault);
+	//	}
+	//}
+	//if (equipo != TeamEnum && pelotaActor->jugadorTemp->TeamEnum == TeamEnum) {
+	//	//No soy yo, por lo que paso a defensa
+	//			switch (TeamEnum) {
+	//			case ETeamEnum::TE_Buenos: {
+	//				//Pasa al defensa el equipo Bueno
+	//				UE_LOG(LogTemp, Warning, TEXT("Pasa a defensa los Buenos"));
+	//				posicionDefault = posicionDefault - estrategiaAtaque;
+	//				break;
+	//			}
+	//			case ETeamEnum::TE_Malos: {
+	//				//Pasa al defensa el equipo Malos
+	//				UE_LOG(LogTemp, Warning, TEXT("Pasa a defensa los Malos"));
+	//				posicionDefault = posicionDefault + estrategiaAtaque;
+	//				break;
+	//			}
+	//			}
 
-				if (AIPlayerController && NotMovement) {
-					NotMovement = false;
-					capsulaIAOverlap = false;
-					//Hace que vuelva a la posicion default de ese momento.
-					AIPlayerController->Moverlocation(posicionDefault);
-				}
-		
-	}
+	//			if (AIPlayerController && NotMovement) {
+	//				NotMovement = false;
+	//				//capsulaIAOverlap = false;
+	//				//Hace que vuelva a la posicion default de ese momento.
+	//				AIPlayerController->Moverlocation(posicionDefault);
+	//			}
+	//	
+	//}
 }
 
 

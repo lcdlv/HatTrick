@@ -138,12 +138,12 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	UFUNCTION()
+	/*UFUNCTION()
 	void OnOverlapIABegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
 	void OnOverlapIAEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
+*/
 	bool isPossessed;
 
 	int fuerza();
@@ -166,7 +166,7 @@ public:
 
 	class ASoccerAIController* AIPlayerController;
 
-	bool capsulaIAOverlap = false;
+	//bool capsulaIAOverlap = false;
 
 	FVector estrategiaAtaque = FVector(0, 500, 0);
 	

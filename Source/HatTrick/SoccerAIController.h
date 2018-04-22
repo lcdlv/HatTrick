@@ -44,8 +44,6 @@ public:
 
 	void Moverlocation(FVector lugar);
 
-	void TimerVuelve();
-
 	bool volviendoPosicion = false;
 
 };

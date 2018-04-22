@@ -40,9 +40,6 @@ void ASoccerAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFol
 void ASoccerAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-
-	
 }
 
 void ASoccerAIController::RunDispatcher(EnumEstadosJuego estado)
@@ -55,7 +52,7 @@ void ASoccerAIController::RunDispatcher(EnumEstadosJuego estado)
 	case EnumEstadosJuego::Goal:
 		break;
 	case EnumEstadosJuego::InGame:
-		Moverlocation(player->posicionDefault);
+		//Moverlocation(player->posicionDefault);
 		break;
 	case EnumEstadosJuego::Penal:
 		break;
@@ -105,14 +102,4 @@ void ASoccerAIController::Moverlocation(FVector lugar)
 	//Activa que esta volviendo
 	volviendoPosicion = true;
 	MoveToLocation(lugar);
-	GetWorldTimerManager().SetTimer(timerHander, this, &ASoccerAIController::TimerVuelve, 1, true);
-}
-
-void ASoccerAIController::TimerVuelve()
-{
-		//Si ya no vuelve, y la capsula dice que esta con overlap, sale a buscar la pelota.
-		if (!volviendoPosicion && player->capsulaIAOverlap) {
-			UE_LOG(LogTemp, Warning, TEXT("Activa el buscado"));
-			MoverPersonaje();
-		}
 }
