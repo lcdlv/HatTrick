@@ -22,7 +22,10 @@ ASoccerPlayer::ASoccerPlayer()
 	
 	//Busca todos los montajes y cosas en las carpetas.
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShootMontageObj(TEXT("/Game/Mesh/shot_Montage"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> EmpujonMontageObj(TEXT("/Game/Mesh/Empujon_Montage"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> PaseMontageObj(TEXT("/Game/Mesh/Pase_Montage"));
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> BarridaMontageObj(TEXT("/Game/Mesh/entrada_Montage"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> CaeMontageObj(TEXT("/Game/Mesh/Cae_Montage"));
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> GolpeadoMontageObj(TEXT("/Game/Mesh/cambio_sentido_Montage"));
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletoObj(TEXT("/Game/Mesh/player"));
 	static ConstructorHelpers::FObjectFinder<UClass> animationBlueprint(TEXT("/Game/MyAnimPlayer.MyAnimPlayer_C"));
@@ -34,6 +37,9 @@ ASoccerPlayer::ASoccerPlayer()
 	materialMalo = MaterialMaloObj.Object;
 	ShootMontage = ShootMontageObj.Object;
 	BarridaMontage = BarridaMontageObj.Object;
+	EmpujonMontage = EmpujonMontageObj.Object;
+	CaeMontage = CaeMontageObj.Object;
+	PaseMontage = PaseMontageObj.Object;
 	GolpeadoMontage = GolpeadoMontageObj.Object;
 	//Crea capsula comun para pelota
 	capsulaCustom = CreateAbstractDefaultSubobject<UCapsuleComponent>(TEXT("CapsulaColicion"));
@@ -254,8 +260,14 @@ void ASoccerPlayer::btnShotRelease()
 		pelotaActor->Shootea(GetActorForwardVector()*fuerza()*1000);
 	}
 	else {
-		//No hace nada aun. Es en caso de no tener la pelota
-		//Deberia hacer el salto con patada voladora
+		//En caso que no tenga la pelota hace el empujon para sacarla.
+		inAnimation = true;
+		PlayAnimMontage(EmpujonMontage, 1.0f);
+		//Hace que el player enemigo sufra el golpe.
+		inEmpuja = true;
+		if (playerTemp != nullptr) playerTemp->esGolpeado();
+		tiempoDelay = EmpujonMontage->GetPlayLength();
+		GetWorldTimerManager().SetTimer(timerHander, this, &ASoccerPlayer::TimerGenericoEmpuja, tiempoDelay);
 	}
 }
 
@@ -270,8 +282,8 @@ void ASoccerPlayer::btnPaseRelease()
 		pelotaActor->Physic(true);
 		hasBall = false;
 		inAnimation = true;
-		PlayAnimMontage(ShootMontage, 1.0f);
-		tiempoDelay = ShootMontage->GetPlayLength();
+		PlayAnimMontage(PaseMontage, 1.0f);
+		tiempoDelay = PaseMontage->GetPlayLength();
 		GetWorldTimerManager().SetTimer(timerHander, this, &ASoccerPlayer::TimerGenericoEmpuja, tiempoDelay);
 
 		//Magia del pase perfecto
@@ -288,11 +300,12 @@ void ASoccerPlayer::btnPaseRelease()
 
 		//En caso que no tenga la pelota hace la barrida para sacarla.
 		inAnimation = true;
-		PlayAnimMontage(BarridaMontage, 1.0f);
+		float velocidadAnim = 3.0f;
+		PlayAnimMontage(BarridaMontage, velocidadAnim);
 		//Hace que el player enemigo sufra el golpe.
 		inEmpuja = true;
 		if (playerTemp != nullptr) playerTemp->esGolpeado();
-		tiempoDelay = BarridaMontage->GetPlayLength();
+		tiempoDelay = (BarridaMontage->GetPlayLength())/ velocidadAnim;
 		GetWorldTimerManager().SetTimer(timerHander, this, &ASoccerPlayer::TimerGenericoEmpuja, tiempoDelay);
 	}
 
@@ -404,8 +417,8 @@ void ASoccerPlayer::esGolpeado()
 {
 	//Me pegan, por ahora hace la animacion de patear. El timer hace que se salgan la variables.
 	inAnimation = true;
-	PlayAnimMontage(ShootMontage, 1.0f);
-	tiempoDelay = ShootMontage->GetPlayLength();
+	PlayAnimMontage(CaeMontage, 1.0f);
+	tiempoDelay = CaeMontage->GetPlayLength();
 	GetWorldTimerManager().SetTimer(timerHander, this, &ASoccerPlayer::TimerGenericoEmpuja, tiempoDelay);
 }
 

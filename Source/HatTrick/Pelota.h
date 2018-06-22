@@ -39,6 +39,7 @@ public:
 
 	void Shootea(FVector vector);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class ASoccerPlayer* soccerPlayer;
 
 private:
